@@ -19,32 +19,32 @@ data$x1 <- sample(seq(10000000, 99999999), nrow(data))
 ui <- fluidPage(
   
   # Title that appears on the Tab
-  title = "Police Violence in Louisiana, By The Facts | ACLU of Louisiana",
+  title = "Policing in Louisiana, By The Facts | ACLU of Louisiana",
   
-
+  
   # Defining the head
   tags$head(
     
-
+    
     # Creating website Metadata
     tags$link(rel = "shortcut icon", href = "https://www.laaclu.org/profiles/aclu_affiliates/themes/custom/affiliates/favicons/favicon.ico?v=3.0"),
-    tags$meta(property = "og:title", content = "Police Violence in Louisiana, By The Facts | ACLU of Louisiana"),
+    tags$meta(property = "og:title", content = "Policing in Louisiana, By The Facts | ACLU of Louisiana"),
     tags$meta(property = "og:description", content = "Ask, answer, and share questions about policing in Louisiana"),
     tags$meta(property = "og:image", content = "https://www.aclujusticelab.org/wp-content/uploads/2020/12/ACLULA_JusticeLabStyleGuide-02.png"),
-    tags$meta(property = "og:url", content = "https://laaclu.shinyapps.io/quick-facts/"),
+    tags$meta(property = "og:url", content = "https://laaclu.shinyapps.io/facts/"),
     tags$meta(property = "og:type", content = "website"),
     tags$meta(property = "og:author", content = "Elijah Appelson"),
     tags$meta(name = "twitter:card", content = "summary"),
-    tags$meta(name = "twitter:title", content = "Police Violence in Louisiana, By The Facts | ACLU of Louisiana"),
+    tags$meta(name = "twitter:title", content = "Policing in Louisiana, By The Facts | ACLU of Louisiana"),
     tags$meta(name = "twitter:description", content = "Ask, answer, and share questions about policing in Louisiana"),
     tags$meta(name = "twitter:image", content = "https://www.aclujusticelab.org/wp-content/uploads/2020/12/ACLULA_JusticeLabStyleGuide-02.png"),
     
-
-# ------------------------- Defining the JavaScript ----------------------------
-
-# JavaScript
-tags$script(
-  HTML("
+    
+    # ------------------------- Defining the JavaScript ----------------------------
+    
+    # JavaScript
+    tags$script(
+      HTML("
     document.addEventListener('DOMContentLoaded', function() {
       const restContent = document.getElementById('restContent');
       const mainScreen = document.getElementById('mainScreen');
@@ -168,20 +168,20 @@ tags$script(
       );
     });
   ")
-)),
-
-
-# ----------------------------- Adding the CSS ---------------------------------
-
-# Adding the social media buttons
-tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"),
-tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"),
-tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"),
-
-# Defining the website style
-tags$style(
-  HTML(
-  "
+    )),
+  
+  
+  # ----------------------------- Adding the CSS ---------------------------------
+  
+  # Adding the social media buttons
+  tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"),
+  tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"),
+  tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"),
+  
+  # Defining the website style
+  tags$style(
+    HTML(
+      "
   /* Creating the download data*/
   #downloadData {
           display: block;
@@ -910,12 +910,26 @@ tags$style(
     }
   }
   
+  .modal-disclaimer .modal-header {
+        background-color: #ffa500;
+        color: white;
+        font-weight: bold;
+      }
+      .modal-disclaimer .modal-body {
+        background-color: #fffaf0;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #333;
+      }
+      .modal-disclaimer .modal-footer {
+        background-color: #fffaf0;
+      }
   "
-  )
-),
-
-# ------------------------ Defining the Help Box -------------------------------
-
+    )
+  ),
+  
+  # ------------------------ Defining the Help Box -------------------------------
+  
   # Adding the help button
   tags$button(
     id = "help_button",
@@ -932,7 +946,7 @@ tags$style(
     div(class = "help-box-content",
         tags$p("Summary", class="help-box-titles"),
         tags$p("This comprehensive project contains 55 unique questions regarding police killings, misconduct, and or personnel from 330+ law 
-               enforcement agencies across Louisiana spanning 60+ years, for a total of 120,000+ quick facts. We created this project to make
+               enforcement agencies across Louisiana spanning 60+ years, for a total of 120,000+ facts. We created this project to make
                actionable insights easy to search, find, and share."),
         
         tags$br(),
@@ -940,8 +954,8 @@ tags$style(
         tags$p("Sources", class="help-box-titles"),
         tags$p("The data sources used in this tool include the ", 
                tags$a(href = "https://llead.co/", "Louisiana Law Enforcement and Accountability Database"), "(Updated February 10th, 2024), ",
-               tags$a(href = "https://mappingpoliceviolence.org/", "Mapping Police Violence"), "(Updated September 10th, 2024), and the ",
-               tags$a(href = "https://cde.ucr.cjis.gov/", "FBI Crime Explorer Law Enforcement Personnel Data"), "(Updated February 10th, 2024)."),
+               tags$a(href = "https://mappingpoliceviolence.org/", "Mapping Police Violence"), "(Updated July 28th, 2025), and the ",
+               tags$a(href = "https://cde.ucr.cjis.gov/", "FBI Crime Explorer Law Enforcement Personnel Data"), "(Updated February 17th, 2025)."),
         tags$br(),
         
         tags$p("Usage", class="help-box-titles"),
@@ -966,24 +980,37 @@ tags$style(
         tags$br(),
         
         tags$p("Disclaimer", class="help-box-titles"),
-        tags$p("All of the information accessible from this tool is generated using publicly accessible resources. As a result, we cannot verify the accuracy of any of the numbers generated."),
+        tags$p(
+          div(
+            "The information provided by this tool is generated using publicly available data from the",
+            tags$a(href = "https://llead.co/", "Louisiana Law Enforcement and Accountability Database,"),
+            tags$a(href = "https://mappingpoliceviolence.org/", "Mapping Police Violence,"),"and the",
+            tags$a(href = "https://cde.ucr.cjis.gov/", "FBI Crime Explorer Law Enforcement Personnel Data"),
+            "and may not be fully accurate or complete. ",
+            "Misconduct allegation categories, such as use of force, domestic violence, and others, were inferred through predictive methods applied to the misconduct allegation data.",
+            "As a result, they may not reflect the full scope of misconduct or violence. ",
+            "Additionally, significant limitations exist due to reporting issues by law enforcement agencies. For example, it is not possible to accurately determine the number of domestic violence allegations, ",
+            "as RS 40:2533 allows law enforcement to expunge such records. ",
+            tags$em("Please use this tool with caution, understanding that the data is inherently imperfect.")
+          )
+        ),
         
         tags$br(),
         
         tags$p("Questions", class="help-box-titles"),
-        tags$p("If you have any questions or concerns about the content of this tool, you can contact ", tags$a(href = "mailto:eappelson@laaclu.org", "eappelson@laaclu.org."))
+        tags$p("If you have any questions or concerns about the content of this tool, you can contact ", tags$a(href = "mailto:eappelson@laaclu.org", "eappelson@laaclu.org."), " To learn more about how the tool was built, you can visit this project’s ", tags$a(href = "https://github.com/aclu-national/LA_police_facts", "GitHub Page."))
     )
   ),
-
-
-# ------------------- Defining the Introductory Screen UI  ---------------------
+  
+  
+  # ------------------- Defining the Introductory Screen UI  ---------------------
   
   # Defining the UI
   tags$div(
     id = "mainScreen",
     class = "intro-screen",
     tags$h1(
-      "POLICE VIOLENCE IN LOUISIANA,",
+      "POLICING IN LOUISIANA,",
       class = "intro-screen-title"
     ),
     tags$h2(
@@ -999,6 +1026,17 @@ tags$style(
       class = "intro-screen-link-container",
       tags$a(
         href = "https://aclujusticelab.org",
+        target = "_blank",
+        tags$img(
+          src = "https://aclujusticelab.org/wp-content/uploads/2020/12/ACLULA_JusticeLabStyleGuide-02.png",
+          class = "intro-screen-link"
+        )
+      )
+    ),
+    tags$div(
+      class = "intro-screen-link-container",
+      tags$a(
+        href = "https://aclujusticelab.org",
         target = "_blank",  # optional, opens link in new tab
         tags$img(
           src = "https://aclujusticelab.org/wp-content/uploads/2020/12/ACLULA_JusticeLabStyleGuide-02.png",
@@ -1007,120 +1045,120 @@ tags$style(
       )
     )
   ),
-
-# ------------------------- Defining the Main Page UI  -------------------------
-
-tags$div(
-  id = "restContent",
-  class = "main-page",
   
-  tags$br(),
+  # ------------------------- Defining the Main Page UI  -------------------------
   
-  # Questions at Top
   tags$div(
-    class = "question-content",
+    id = "restContent",
+    class = "main-page",
     
-    tags$p(
-      # Question 1 select
-      tags$select(
-        id = "question1",
-        lapply(c("All Questions", unique(data$question_p1)), function(option) {
-          tags$option(option, value = option)
-        })
-      ),
-      
-      # Question 2 select
-      tags$select(
-        id = "question2",
-        lapply(c("All Agencies", unique(data$question_p2)), function(option) {
-          tags$option(option, value = option)
-        })
-      ),
-      
-      "in",
-      
-      # Question 3 select
-      tags$select(
-        id = "question3",
-        lapply(c("All Years", unique(data$question_p3)), function(option) {
-          tags$option(option, value = option)
-        })
-      ),
-      
-      "?"
-    ),
+    tags$br(),
     
-    # How to use instructions
-    tags$p(
-      'Select a question, agency, and year by clicking the drop-downs above. Press the "Submit" button to see the answer below.',
-      br(),
-      class = "how-use"
-    ),
-    
-    # Buttons: Save, Random, Clear
+    # Questions at Top
     tags$div(
-      class = "button-container",
+      class = "question-content",
       
-      actionButton(
-        "save_button",
-        HTML('<i class="fas fa-paper-plane"></i><span>Submit</span>'),
-        class = "normal-button normal-button-1",
-        onclick = "disableButtonsTemporarily()"
-      ),
-      
-      actionButton(
-        "random_button",
-        HTML('<i class="fas fa-dice"></i><span>Randomize</span>'),
-        class = "normal-button normal-button-2",
-        onclick = "disableButtonsTemporarily()"
-      ),
-      
-      actionButton(
-        "clear_button",
-        HTML('<i class="fa fa-trash"></i><span>Clear</span>'),
-        class = "normal-button normal-button-3",
-        onclick = "disableButtonsTemporarily()"
-      )
-    )
-  ),
-  
-  tags$br(),
-  
-  # Sidebar Panel
-  sidebarPanel(
-    tags$div(
-      id = "sort_group_wrapper",
-      
-      tags$div(
-        class = "sort-by-box",
+      tags$p(
+        # Question 1 select
+        tags$select(
+          id = "question1",
+          lapply(c("All Questions", unique(data$question_p1)), function(option) {
+            tags$option(option, value = option)
+          })
+        ),
         
-        tags$div(
-          tags$span(
-            "Sort by:",
-            class = "sort-by"
-          ),
-          
-          tags$select(
-            id = "sort",
-            lapply(c("None", "Question", "Agency", "Year"), function(option) {
-              tags$option(option, value = option)
-            })
-          )
+        # Question 2 select
+        tags$select(
+          id = "question2",
+          lapply(c("All Agencies", unique(data$question_p2)), function(option) {
+            tags$option(option, value = option)
+          })
+        ),
+        
+        "in",
+        
+        # Question 3 select
+        tags$select(
+          id = "question3",
+          lapply(c("All Years", unique(data$question_p3)), function(option) {
+            tags$option(option, value = option)
+          })
+        ),
+        
+        "?"
+      ),
+      
+      # How to use instructions
+      tags$p(
+        'Select a question, agency, and year by clicking the drop-downs above. Press the "Submit" button to see the answer below.',
+        br(),
+        class = "how-use"
+      ),
+      
+      # Buttons: Save, Random, Clear
+      tags$div(
+        class = "button-container",
+        
+        actionButton(
+          "save_button",
+          HTML('<i class="fas fa-paper-plane"></i><span>Submit</span>'),
+          class = "normal-button normal-button-1",
+          onclick = "disableButtonsTemporarily()"
+        ),
+        
+        actionButton(
+          "random_button",
+          HTML('<i class="fas fa-dice"></i><span>Randomize</span>'),
+          class = "normal-button normal-button-2",
+          onclick = "disableButtonsTemporarily()"
+        ),
+        
+        actionButton(
+          "clear_button",
+          HTML('<i class="fa fa-trash"></i><span>Clear</span>'),
+          class = "normal-button normal-button-3",
+          onclick = "disableButtonsTemporarily()"
         )
       )
     ),
     
-    # Saved checkboxes output
-    tags$div(
-      uiOutput("saved_checkboxes"),
-      class = "inner-box"
+    tags$br(),
+    
+    # Sidebar Panel
+    sidebarPanel(
+      tags$div(
+        id = "sort_group_wrapper",
+        
+        tags$div(
+          class = "sort-by-box",
+          
+          tags$div(
+            tags$span(
+              "Sort by:",
+              class = "sort-by"
+            ),
+            
+            tags$select(
+              id = "sort",
+              lapply(c("None", "Question", "Agency", "Year"), function(option) {
+                tags$option(option, value = option)
+              })
+            )
+          )
+        )
+      ),
+      
+      # Saved checkboxes output
+      tags$div(
+        uiOutput("saved_checkboxes"),
+        class = "inner-box"
+      ),
+      
+      class = "outer-box"
     ),
     
-    class = "outer-box"
-  ),
-  
-  # Output boxes
-  uiOutput("boxes")
+    # Output boxes
+    uiOutput("boxes")
   )
 )
 
@@ -1200,6 +1238,27 @@ server <- function(input, output, session) {
   })
   observe({
     updateSelectInput(session, "question3", choices = c("All Years",sort(filtered_choices()$q3, decreasing = TRUE)), selected = input$question3)
+  })
+  
+  observe({
+    showModal(modalDialog(
+      title = "Disclaimer",
+      easyClose = TRUE,
+      footer = NULL,
+      class = "modal-disclaimer",
+      div(
+        "The information provided by this tool is generated using publicly available data from the",
+        tags$a(href = "https://llead.co/", "Louisiana Law Enforcement and Accountability Database,"),
+        tags$a(href = "https://mappingpoliceviolence.org/", "Mapping Police Violence,"),"and the",
+        tags$a(href = "https://cde.ucr.cjis.gov/", "FBI Crime Explorer Law Enforcement Personnel Data"),
+        "and may not be fully accurate or complete. ",
+        "Misconduct allegation categories, such as use of force, domestic violence, and others, were inferred through predictive methods applied to the misconduct allegation data.",
+        "As a result, they may not reflect the full scope of misconduct or violence. ",
+        "Additionally, significant limitations exist due to reporting issues by law enforcement agencies. For example, it is not possible to accurately determine the number of domestic violence allegations, ",
+        "as RS 40:2533 allows law enforcement to expunge such records. ",
+        tags$em("Please use this tool with caution, understanding that the data is inherently imperfect.")
+      )
+    ))
   })
   
   # Defining an empty list of saved filters
@@ -1363,10 +1422,10 @@ server <- function(input, output, session) {
   observe({
     query <- parseQueryString(session$clientData$url_search)
     
-    if (!is.null(query$fact_id)) {
-      fact_id <- query$fact_id
+    if (!is.null(query$id)) {
+      id <- query$id
       
-      selected_fact <- data[data$x1 == fact_id, ]
+      selected_fact <- data[data$x1 == id, ]
       
       if (nrow(selected_fact) == 0) {
         sample_questions <- sample(data$question_complex, 1)
@@ -1377,7 +1436,7 @@ server <- function(input, output, session) {
         saved_filters[[selected_fact$question_complex]] <- TRUE
       }
     } else {
-      # No fact_id in the URL, display a random question
+      # No id in the URL, display a random question
       sample_questions <- sample(data$question_complex, 1)
       for (question in sample_questions) {
         saved_filters[[question]] <- TRUE
@@ -1407,7 +1466,7 @@ server <- function(input, output, session) {
     content = function(file) {
       # Filter data based on saved filters
       filtered_data <- filter(data, question_complex %in% input$saved_filters) %>%
-        mutate(question_link = paste0("https://laaclu.shinyapps.io/quick-facts/?fact_id=",x1)) %>%
+        mutate(question_link = paste0("https://laaclu.shinyapps.io/facts/?id=",x1)) %>%
         select(
           Question = question_p1,
           Agency = question_p2,
@@ -1521,13 +1580,13 @@ server <- function(input, output, session) {
         <div class="source-text">Source: %s</div>
       </a>
       <div class="social-links">
-        <a href="mailto:?subject=Policing in Louisiana&body=%s (via the ACLU of Louisiana) - https://laaclu.shinyapps.io/quick-facts/?fact_id=%s" target="_blank" style="color: #FCAA17;">
+        <a href="mailto:?subject=Policing in Louisiana&body=%s (via the ACLU of Louisiana) - https://laaclu.shinyapps.io/facts/?id=%s" target="_blank" style="color: #FCAA17;">
           <i class="fas fa-envelope"></i>
         </a>
-        <a href="https://twitter.com/intent/post?url=https://laaclu.shinyapps.io/quick-facts/?fact_id=%s&text=%s (via @ACLUofLouisiana)" target="_blank" style="color: #FCAA17;">
+        <a href="https://twitter.com/intent/post?url=https://laaclu.shinyapps.io/facts/?id=%s&text=%s (via @ACLUofLouisiana)" target="_blank" style="color: #FCAA17;">
           <i class="fab fa-twitter"></i>
         </a>
-        <a href="javascript:void(0);" onclick="copyToClipboard(`%s (via the ACLU of Louisiana) - https://laaclu.shinyapps.io/quick-facts/?fact_id=%s`); Shiny.setInputValue(`show_copy_notification`, Math.random());">        
+        <a href="javascript:void(0);" onclick="copyToClipboard(`%s (via the ACLU of Louisiana) - https://laaclu.shinyapps.io/facts/?id=%s`); Shiny.setInputValue(`show_copy_notification`, Math.random());">        
         <i class="fas fa-copy"></i>
         </a>
       </div>
