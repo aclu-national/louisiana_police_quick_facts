@@ -1,4 +1,4 @@
-# Policing in Louisiana
+# Policing in Louisiana: By the Facts
 ![alt text](https://github.com/aclu-national/louisiana_police_quick_facts/blob/5a3a7304842ee61510c4678ce136f67ec83f2ebb/image_facts.png)
 
 ## Summary
