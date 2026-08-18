@@ -2,21 +2,19 @@
 
 # -----------------------------------------------------------------------
 # Author: Elijah Appelson
-# Update Date: January 27th, 2025
+# Update Date: August 18th, 2026
 # -----------------------------------------------------------------------
-
 
 # Loading Libraries
 library(tidyverse)
 library(janitor)
 
 # Defining the data date
-newest_date <- "2025-07-03"
+newest_date <- "2026-08-18"
 
 # Importing Data
-killing_cheat <- read_csv("data/killing_data/cheat_sheet_killing.csv")
-killing_data <- read_csv(paste0("data/killing_data/", newest_date ,"/Mapping Police Violence.csv"))
-
+killing_cheat <- read_csv("data_creation/data/killing_data/cheat_sheet_killing.csv")
+killing_data <- read_csv(paste0("data_creation/data/killing_data/", newest_date ,"/Mapping Police Violence.csv"))
 
 # Defining a killing dataframe
 killing <- killing_data %>%
@@ -75,21 +73,30 @@ killing <- killing_data %>%
   
   # Fixing more agency names
   mutate(
+    # Trim stray whitespace and normalize curly apostrophes to straight ones first,
+    # so downstream string matching (case_when, cheatsheet join) is consistent
+    agency_name = str_trim(agency_name),
+    agency_name = str_replace_all(agency_name, "[\u2018\u2019]", "'"),
+    
     agency_name = case_when(
       agency_name == "Caddo County Sheriff's Office" ~ "Caddo Parish Sheriff's Office",
-      agency_name == "Calcasieu Parish Sheriff’s Office" ~ "Calcasieu Parish Sheriff's Office",
+      agency_name == "Calcasieu Parish Sheriff's Office" ~ "Calcasieu Parish Sheriff's Office",
       agency_name == "East Baton Rouge Sheriff's Office" ~ "East Baton Rouge Parish Sheriff's Office",
       agency_name == "Hourma Police Department" ~ "Houma Police Department",
       agency_name == "Arcadia Parish Sheriff's Office" ~ "Acadia Parish Sheriff's Office",
       agency_name == "Jefferson Parish Police Department" ~ "Jefferson Parish Sheriff's Office",
-      agency_name == "St. John the Baptist Parish Sheriff's Office" ~ "St. John Parish Sheriff's Office",
-      agency_name == "Tangipahoa Parish Sheriff’s Office" ~ "Tangipahoa Parish Sheriff's Office",
-      agency_name %in% c("Tangipahoa Parish Sheriff’s Office", "Tangipahoa Sheriff's Department") ~ "Tangipahoa Parish Sheriff's Office",
+      str_detect(agency_name, regex("^St\\.? John( the| The) Baptist Parish Sheriff's Office$", ignore_case = TRUE)) ~ "St. John Parish Sheriff's Office",
+      agency_name %in% c("Tangipahoa Parish Sheriff's Office", "Tangipahoa Sheriff's Department") ~ "Tangipahoa Parish Sheriff's Office",
       agency_name == "Terrebonne Parish Sheriff's Department" ~ "Terrebonne Parish Sheriff's Office",
       agency_name == "U.S. Bureau of Investigation" ~ "U.S. Federal Bureau of Investigation",
       agency_name == "US Marshals" ~ "U.S. Marshals Service",
+      agency_name == "Deridder Police Department" ~ "De Ridder Police Department",
+      agency_name == "Desoto Parish Sheriff's Office" ~ "De Soto Parish Sheriff's Office",
       TRUE ~ agency_name
     ),
+    
+    # Normalize "St" -> "St." consistently across agency names
+    agency_name = str_replace(agency_name, "^St(?!\\.)\\s", "St. "),
     
     # Replacing sheriff names
     agency_name = ifelse(str_detect(agency_name, "Parish"),
@@ -101,12 +108,17 @@ killing <- killing_data %>%
   
   # Joining by a handwritten cheatsheet of agency names
   left_join(killing_cheat, by = "agency_name") %>%
+  
+  # If not in killing_cheat, use the agency_name already there
+  mutate(correct_agency_name = coalesce(correct_agency_name, agency_name)) %>%
+  
   group_by(id) %>%
   summarize(across(-c(agency_name, correct_agency_name), ~first(.)), 
             agency_name = paste(agency_name, collapse = ", "),
             correct_agency_name = paste(correct_agency_name, collapse = ", ")
   )
 
+setdiff(unique(killing$agency_name), killing_cheat$agency_name)
 
 # Defining the appropriate columns
 killing_func <- function(df){
@@ -115,9 +127,9 @@ killing_func <- function(df){
               
               # Making names a list
               names_people_killed = case_when(
-                n() == 1 ~ name,
+                n() == 1 ~ name[1],
                 n() == 2 ~ paste(name, collapse = " and "),
-                TRUE ~ paste(head(name, -1), collapse = ", ") %>% paste(., ", and", tail(name, 1), sep = " ")
+                TRUE ~ paste(paste(head(name, -1), collapse = ", "), tail(name, 1), sep = ", and ")
               ),
               
               # Defining the number of people killed by race
@@ -143,18 +155,15 @@ killing_func <- function(df){
               mental_illness_drugs = sum(signs_of_mental_illness == "Drug or Alcohol Use", na.rm = TRUE),
               
               # Defining the number of people killed by circumstances
-              not_fleeing = sum(if_else(wapo_flee == "Not Fleeing", 1, 0), na.rm = TRUE),
-              fleeing = sum(if_else(wapo_flee %in% c("Car", "Car, Foot", "Foot"), 1, 0), na.rm = TRUE),
-              violent_crime = sum(ifelse(encounter_type %in% 
-                                           c("Part 1 Violent Crime", 
-                                             "Part 1 Violent Crime/Domestic Disturbance"), 1, 0), na.rm = TRUE),
-              non_violent_crime = sum(ifelse(!is.na(encounter_type) & !(encounter_type %in% c("Part 1 Violent Crime", 
-                                                                                              "Part 1 Violent Crime/Domestic Disturbance")), 1, 0), na.rm = TRUE),
-              allegedly_armed = sum(ifelse(str_detect(allegedly_armed, "Allegedly"),1,0), na.rm = TRUE),
+              not_fleeing = sum(if_else((is.na(flee) | flee == "Not Fleeing"), 1, 0), na.rm = TRUE),
+              fleeing = sum(if_else(!(is.na(flee) | flee == "Not Fleeing"), 1, 0), na.rm = TRUE),
+              violent_crime = sum(ifelse(encounter_type == "Part 1 Violent Crime", 1, 0), na.rm = TRUE),
+              non_violent_crime = sum(ifelse(encounter_type != "Part 1 Violent Crime", 1, 0), na.rm = TRUE),
+              allegedly_armed = sum(ifelse(str_detect(allegedly_armed_with, "Gun|Edged weapon|Other|Unknown weapon"),1,0), na.rm = TRUE),
               
               # Defining the the circumstances
-              disposition_pending = sum(ifelse(str_detect(tolower(disposition_official), "pending|under"),1,0), na.rm = TRUE),
-              disposition_charge = sum(ifelse(str_detect(tolower(disposition_official), "charged"),1,0), na.rm = TRUE),
+              disposition_pending = sum(ifelse(str_detect(tolower(disposition_official), "pending investigation"),1,0), na.rm = TRUE),
+              disposition_charge = sum(ifelse(str_detect(tolower(disposition_official), "charged|convicted|acquitted|charges dropped|dismissed criminal charges"),1,0), na.rm = TRUE),
               disposition_cleared_justified = sum(ifelse(str_detect(tolower(disposition_official), "cleared|justified"),1,0), na.rm = TRUE)
     ) %>%
     mutate_all(~ replace(., is.na(.), "Unknown"))
@@ -176,12 +185,11 @@ all_year_killing <- killing %>%
   unnest(correct_agency_name) %>%
   group_by(correct_agency_name) %>%
   killing_func() %>%
-  mutate(year = "2013-2025") %>%
+  mutate(year = "2013-2026") %>%
   mutate(year = as.character(year),
          years_report = "Total Years Collecting Police Killings") %>%
   distinct(,.keep_all = TRUE)
 
-year_by_year_killing
 # Concatenating year by year and all killings 
 df <- rbind(year_by_year_killing,all_year_killing) %>%
   pivot_longer(cols = "n_killing":"disposition_cleared_justified") %>%
