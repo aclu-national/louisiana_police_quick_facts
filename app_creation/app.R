@@ -1466,7 +1466,7 @@ server <- function(input, output, session) {
     content = function(file) {
       # Filter data based on saved filters
       filtered_data <- filter(data, question_complex %in% input$saved_filters) %>%
-        mutate(question_link = paste0("https://laaclu.shinyapps.io/facts/?id=",x1)) %>%
+        mutate(question_link = paste0("https://laaclu-facts.share.connect.posit.cloud?id=",x1)) %>%
         select(
           Question = question_p1,
           Agency = question_p2,
@@ -1580,13 +1580,13 @@ server <- function(input, output, session) {
         <div class="source-text">Source: %s</div>
       </a>
       <div class="social-links">
-        <a href="mailto:?subject=Policing in Louisiana&body=%s (via the ACLU of Louisiana) - https://laaclu.shinyapps.io/facts/?id=%s" target="_blank" style="color: #FCAA17;">
+        <a href="mailto:?subject=Policing in Louisiana&body=%s (via the ACLU of Louisiana) - https://laaclu-facts.share.connect.posit.cloud?id=%s" target="_blank" style="color: #FCAA17;">
           <i class="fas fa-envelope"></i>
         </a>
-        <a href="https://twitter.com/intent/post?url=https://laaclu.shinyapps.io/facts/?id=%s&text=%s (via @ACLUofLouisiana)" target="_blank" style="color: #FCAA17;">
+        <a href="https://twitter.com/intent/post?https://laaclu-facts.share.connect.posit.cloud?id=%s&text=%s (via @ACLUofLouisiana)" target="_blank" style="color: #FCAA17;">
           <i class="fab fa-twitter"></i>
         </a>
-        <a href="javascript:void(0);" onclick="copyToClipboard(`%s (via the ACLU of Louisiana) - https://laaclu.shinyapps.io/facts/?id=%s`); Shiny.setInputValue(`show_copy_notification`, Math.random());">        
+        <a href="javascript:void(0);" onclick="copyToClipboard(`%s (via the ACLU of Louisiana) - https://laaclu-facts.share.connect.posit.cloud?id=%s`); Shiny.setInputValue(`show_copy_notification`, Math.random());">        
         <i class="fas fa-copy"></i>
         </a>
       </div>
