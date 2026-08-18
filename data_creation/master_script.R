@@ -9,4 +9,4 @@ data <- rbind(police_misconduct_df,
               police_personnel_df)
 
 # Saving binded data as `df.csv`
-write.csv(data,"../app_creation/df.csv")
+write.csv(data,"app_creation/df.csv")
