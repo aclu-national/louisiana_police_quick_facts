@@ -12,13 +12,13 @@ library(zoo)
 library(tidyverse)
 
 # Defining the data date
-newest_date <- "2025-01-27"
+newest_date <- "2026-08-18"
 
 # Defining Links
-pd_sizes_link = paste0("data/overview_data/", newest_date,"/lee_1960_2023.csv")
-agency_locations_link = "data/misconduct_data/data_agency-reference-list.csv"
-pd_references_link = "data/overview_data/35158-0001-Data.rda"
-overview_cheat = "data/overview_data/cheat_sheet_overview.csv"
+pd_sizes_link = paste0("data_creation/data/overview_data/", newest_date,"/lee_1960_2025.csv")
+agency_locations_link = "data_creation/data/misconduct_data/data_agency-reference-list.csv"
+pd_references_link = "data_creation/data/overview_data/35158-0001-Data.rda"
+overview_cheat = "data_creation/data/overview_data/cheat_sheet_overview.csv"
 
 # Reading in data
 pd_sizes <- read_csv(here::here(pd_sizes_link))
@@ -73,12 +73,16 @@ df <- overview_better %>%
          year = data_year,
          population,
          `male_officer_ct`:`pe_ct_per_1000`) %>%
+  rename(
+    male_civilian_ct = male_cilvilian_ct,
+    female_civilian_ct = female_cilvilian_ct,
+  ) %>%
   mutate(
     male_total_ct_per_huntho = 10^5*male_total_ct/population,
     female_total_ct_per_huntho = 10^5*female_total_ct/population,
     officer_ct_per_huntho = 10^5*officer_ct/population,
     civilian_ct_per_huntho = 10^5*civilian_ct/population,
-    pe_ct_per_1000 = 100*pe_ct_per_1000) %>%
+    pe_ct_per_1000 = 100*as.numeric(pe_ct_per_1000)) %>%
   mutate_all(~ replace(., is.infinite(.), NA)) %>%
   mutate_all(as.character) %>%
   pivot_longer(cols = "population":"pe_ct_per_1000") %>%
